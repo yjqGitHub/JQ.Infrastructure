@@ -1,5 +1,6 @@
 ﻿using JQ.Container;
 using JQ.Extension;
+using JQ.Redis.StackExchangeRedis;
 using JQ.Utils;
 using System;
 using System.Reflection;
@@ -26,8 +27,19 @@ namespace JQ.Configurations
         /// </summary>
         public string AppDomainName { get; set; }
 
+        /// <summary>
+        /// 默认的日志记录器名字
+        /// </summary>
         public string DefaultLoggerName { get; set; } = "JQ.*";
 
+        /// <summary>
+        /// redisKey的默认前缀
+        /// </summary>
+        public string RedisPrfix { get; set; } = "JQ";
+
+        /// <summary>
+        /// 配置文件的路径
+        /// </summary>
         public string AppConfigPath
         {
             get
@@ -85,6 +97,8 @@ namespace JQ.Configurations
         {
             //停止配置文件监控
             ConfigWacherUtil.Close();
+            //释放所有redis连接
+            ConnectionMultiplexerFactory.DisposeConn();
         }
 
         #endregion static

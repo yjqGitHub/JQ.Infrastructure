@@ -77,6 +77,7 @@
     <Compile Include="Extension\BytesExtension.cs" />
     <Compile Include="Extension\ExceptionExtension.cs" />
     <Compile Include="Extension\FilePathExtension.cs" />
+    <Compile Include="Extension\ObjectConvertExtension.cs" />
     <Compile Include="Extension\ObjectJudgeExtension.cs" />
     <Compile Include="Extension\StringExtension.cs" />
     <Compile Include="JQDisposable.cs" />
@@ -87,6 +88,7 @@
     <Compile Include="Logger\NLogger\NLoggerFactory.cs" />
     <Compile Include="Redis\IRedisClient.cs" />
     <Compile Include="Redis\RedisCacheOptions.cs" />
+    <Compile Include="Redis\StackExchangeRedis\ConnectionMultiplexerFactory.cs" />
     <Compile Include="Serialization\DefaultBinarySerializer.cs" />
     <Compile Include="Serialization\IJsonSerializer.cs" />
     <Compile Include="Serialization\Json\JsonBinarySerializer.cs" />
@@ -105,9 +107,7 @@
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Redis\StackExchangeRedis\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

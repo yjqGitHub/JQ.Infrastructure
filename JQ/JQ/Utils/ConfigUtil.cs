@@ -1,5 +1,6 @@
 ﻿using JQ.Configurations;
 using JQ.Extension;
+using System;
 using System.Xml;
 
 namespace JQ.Utils
@@ -22,7 +23,7 @@ namespace JQ.Utils
         /// <param name="memberName">调用成员</param>
         /// <param name="defaultLoggerName">默认日志记录名</param>
         /// <returns>app配置文件的设置的值</returns>
-        public static string GetValue(string key, string memberName = null)
+        public static string GetValue(string key, string memberName = null, string loggerName = null, Type loggerType = null)
         {
             return ExceptionUtil.LogException(() =>
             {
@@ -47,7 +48,7 @@ namespace JQ.Utils
                     }
                 }
                 return null;
-            }, memberName: memberName);
+            }, memberName: memberName, loggerName: loggerName, loggerType: loggerType);
         }
 
         #endregion 根据Key获取app配置文件的设置的值
@@ -61,7 +62,7 @@ namespace JQ.Utils
         /// <param name="value">设置的值</param>
         /// <param name="memberName">调用成员</param>
         /// <param name="defaultLoggerName">默认日志记录名</param>
-        public static void SetValue(string key, string value, string memberName = null)
+        public static void SetValue(string key, string value, string memberName = null, string loggerName = null, Type loggerType = null)
         {
             ExceptionUtil.LogException(() =>
             {
@@ -83,7 +84,7 @@ namespace JQ.Utils
                     xNode.AppendChild(xElem2);
                 }
                 xDoc.Save(GetAppConfigPath());
-            }, memberName: memberName);
+            }, memberName: memberName, loggerName: loggerName, loggerType: loggerType);
         }
 
         #endregion 根据Key设置app配置文件的值，没有则添加
