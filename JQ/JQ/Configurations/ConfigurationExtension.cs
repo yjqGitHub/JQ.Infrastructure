@@ -2,6 +2,8 @@
 using JQ.Configurations.ServiceRegisterName;
 using JQ.Container;
 using JQ.Container.Autofac;
+using JQ.Redis;
+using JQ.Redis.StackExchangeRedis;
 using JQ.Serialization;
 using JQ.Serialization.Json;
 using JQ.Serialization.Protobuf;
@@ -29,6 +31,7 @@ namespace JQ.Configurations
                 .UseDefaultBinarySerializer()
                 .UseJsonBinarySerializer()
                 .UseProtobufBinarySerializer()
+                .UseStackExchangeRedis()
                 ;
             return configuration;
         }
@@ -90,5 +93,15 @@ namespace JQ.Configurations
         }
 
         #endregion BinarySerializer
+
+        #region Redis
+
+        public static JQConfiguration UseStackExchangeRedis(this JQConfiguration configuration)
+        {
+            configuration.SetDefault<IRedisDatabaseProvider, StackExchangeRedisProvider>(serviceName: "StackExchangeRedis");
+            return configuration;
+        }
+
+        #endregion Redis
     }
 }

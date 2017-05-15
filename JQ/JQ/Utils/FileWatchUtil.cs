@@ -34,10 +34,7 @@ namespace JQ.Utils
                 {
                     _timeOutMillis = timeOutMillis.Value;
                 }
-                if (action == null)
-                {
-                    throw new ArgumentNullException("file changed action");
-                }
+                EnsureUtil.NotNull(action, "file changed action");
                 _fileChangedHandle = action;
                 _fileInfo = new FileInfo(filePath);
             }
@@ -59,14 +56,8 @@ namespace JQ.Utils
             {
                 _timeOutMillis = timeOutMillis.Value;
             }
-            if (action == null)
-            {
-                throw new ArgumentNullException("file changed action");
-            }
-            if (_fileInfo == null)
-            {
-                throw new ArgumentNullException("watching fileInfo");
-            }
+            EnsureUtil.NotNull(action, "file changed action");
+            EnsureUtil.NotNull(_fileInfo, "watching fileInfo");
             _fileChangedHandle = action;
             _fileInfo = fileInfo;
         }
