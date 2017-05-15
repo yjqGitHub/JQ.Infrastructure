@@ -1,4 +1,6 @@
 ﻿using JQ.Container;
+using JQ.Extension;
+using JQ.Utils;
 using System;
 using System.Reflection;
 
@@ -13,6 +15,8 @@ namespace JQ.Configurations
     /// </summary>
     public sealed class JQConfiguration
     {
+        private string _appConfigPath;
+
         private JQConfiguration()
         {
         }
@@ -22,12 +26,27 @@ namespace JQ.Configurations
         /// </summary>
         public string AppDomainName { get; set; }
 
-        public static JQConfiguration Instance { get; private set; }
+        public string DefaultLoggerName { get; set; } = "JQ.*";
 
-        public static JQConfiguration Create(string appDomainName)
+        public string AppConfigPath
         {
-            Instance = new JQConfiguration { AppDomainName = appDomainName };
-            return Instance;
+            get
+            {
+                if (_appConfigPath.IsNullOrWhiteSpace())
+                {
+                    _appConfigPath = GetDefaultAppConfigPath();
+                }
+                return _appConfigPath;
+            }
+            set
+            {
+                _appConfigPath = value;
+            }
+        }
+
+        private string GetDefaultAppConfigPath()
+        {
+            return FileUtil.GetDomianPath() + "/AppData/Config/AppSetting.config";
         }
 
         public JQConfiguration SetDefault<TService, TImplementer>(string serviceName = null, LifeStyle lifeStyle = LifeStyle.Singleton)
@@ -51,5 +70,23 @@ namespace JQ.Configurations
             ContainerManager.RegisterAssemblyTypes(assemblies, predicate, lifeStyle);
             return this;
         }
+
+        #region static
+
+        public static JQConfiguration Instance { get; private set; }
+
+        public static JQConfiguration Create(string appDomainName, string appConfigPath = null)
+        {
+            Instance = new JQConfiguration { AppDomainName = appDomainName };
+            return Instance;
+        }
+
+        public static void UnInstall()
+        {
+            //停止配置文件监控
+            ConfigWacherUtil.Close();
+        }
+
+        #endregion static
     }
 }

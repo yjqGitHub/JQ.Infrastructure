@@ -47,7 +47,7 @@ namespace JQ.Container.Autofac
         public void RegisterType(Type implementationType, string serviceName = null, LifeStyle lifeStyle = LifeStyle.Singleton)
         {
             var registrationBuilder = _containerBuilder.RegisterType(implementationType);
-            if (serviceName.IsNotNullOrWhiteSpace())
+            if (serviceName.IsNotNullAndNotWhiteSpace())
             {
                 registrationBuilder.Named(serviceName, implementationType);
             }
@@ -64,7 +64,7 @@ namespace JQ.Container.Autofac
         public void RegisterType(Type serviceType, Type implementationType, string serviceName = null, LifeStyle lifeStyle = LifeStyle.Singleton)
         {
             var registrationBuilder = _containerBuilder.RegisterType(implementationType).As(serviceType);
-            if (serviceName.IsNotNullOrWhiteSpace())
+            if (serviceName.IsNotNullAndNotWhiteSpace())
             {
                 registrationBuilder.Named(serviceName, implementationType);
             }
@@ -83,7 +83,7 @@ namespace JQ.Container.Autofac
             where TImplementer : class, TService
         {
             var registrationBuilder = _containerBuilder.RegisterType<TImplementer>().As<TService>();
-            if (serviceName.IsNotNullOrWhiteSpace())
+            if (serviceName.IsNotNullAndNotWhiteSpace())
             {
                 registrationBuilder.Named<TService>(serviceName);
             }

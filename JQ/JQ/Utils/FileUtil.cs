@@ -1,9 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace JQ.Utils
 {
@@ -16,6 +12,15 @@ namespace JQ.Utils
     /// </summary>
     public static class FileUtil
     {
+        /// <summary>
+        /// 获取当前项目的基目录
+        /// </summary>
+        /// <returns></returns>
+        public static string GetDomianPath()
+        {
+            return AppDomain.CurrentDomain.BaseDirectory;
+        }
+
         /// <summary>
         /// 判断文件是否存在本地目录
         /// </summary>

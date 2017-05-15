@@ -14,7 +14,7 @@
         /// </summary>
         /// <param name="str">字符串</param>
         /// <returns>null或者String.Empty时返回true</returns>
-        public static bool IsNullAndEmpty(this string str)
+        public static bool IsNullOrEmpty(this string str)
         {
             return string.IsNullOrEmpty(str);
         }
@@ -24,9 +24,9 @@
         /// </summary>
         /// <param name="str">字符串</param>
         /// <returns>不为 null 且不是String.Empty时返回true</returns>
-        public static bool IsNotNullAndEmpty(this string str)
+        public static bool IsNotNullAndNotEmpty(this string str)
         {
-            return !(IsNullAndEmpty(str));
+            return !(IsNullOrEmpty(str));
         }
 
         /// <summary>
@@ -44,7 +44,7 @@
         /// </summary>
         /// <param name="str">字符串</param>
         /// <returns>不为null、空时返回true<</returns>
-        public static bool IsNotNullOrWhiteSpace(this string str)
+        public static bool IsNotNullAndNotWhiteSpace(this string str)
         {
             return !IsNullOrWhiteSpace(str);
         }
