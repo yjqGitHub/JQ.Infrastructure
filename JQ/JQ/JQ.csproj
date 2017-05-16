@@ -75,6 +75,7 @@
     <Compile Include="Container\LifeStyle.cs" />
     <Compile Include="Container\ContainerManager.cs" />
     <Compile Include="Extension\BytesExtension.cs" />
+    <Compile Include="Extension\ConcurrentDicExtension.cs" />
     <Compile Include="Extension\ExceptionExtension.cs" />
     <Compile Include="Extension\FilePathExtension.cs" />
     <Compile Include="Extension\IEnumerableExtension.cs" />
@@ -82,13 +83,16 @@
     <Compile Include="Extension\ObjectConvertExtension.cs" />
     <Compile Include="Extension\ObjectJudgeExtension.cs" />
     <Compile Include="Extension\StringExtension.cs" />
+    <Compile Include="Extension\TypeExtension.cs" />
     <Compile Include="JQDisposable.cs" />
     <Compile Include="JQExpection.cs" />
     <Compile Include="Logger\ILogger.cs" />
     <Compile Include="Logger\ILoggerFactory.cs" />
     <Compile Include="Logger\NLogger\NLogLogger.cs" />
     <Compile Include="Logger\NLogger\NLoggerFactory.cs" />
+    <Compile Include="MQ\MqAttribute.cs" />
     <Compile Include="MQ\MqConfig.cs" />
+    <Compile Include="MQ\MqExchangeType.cs" />
     <Compile Include="MQ\RabbitMQ\RabbitMqClient.cs" />
     <Compile Include="MQ\RabbitMQ\RabbitMqConnectionFactory.cs" />
     <Compile Include="Redis\IRedisClient.cs" />
@@ -111,6 +115,8 @@
     <Compile Include="Utils\FileUtil.cs" />
     <Compile Include="Utils\FileWatchUtil.cs" />
     <Compile Include="Utils\LogUtil.cs" />
+    <Compile Include="Utils\StringUtil.cs" />
+    <Compile Include="Utils\TypeUtil.cs" />
     <Compile Include="Utils\WebUtil.cs" />
   </ItemGroup>
   <ItemGroup>
