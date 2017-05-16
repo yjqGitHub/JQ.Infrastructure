@@ -25,8 +25,7 @@ namespace JQ.Utils
         /// <param name="configFilePath">appconfig文件路径</param>
         public static void Install()
         {
-            _configFileWacth = new FileWatchUtil(ConfigUtil.GetAppConfigPath(), InternalConfigure);
-            _configFileWacth.StartWatching();
+            _configFileWacth = new FileWatchUtil(ConfigUtil.GetAppConfigPath(), InternalConfigure, isStart: true);
         }
 
         /// <summary>

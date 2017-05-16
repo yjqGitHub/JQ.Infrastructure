@@ -26,7 +26,8 @@ namespace JQ.Utils
         /// <param name="filePath">文件路径</param>
         /// <param name="action">文件改变后的执行的方法</param>
         /// <param name="timeOutMillis">延迟时间</param>
-        public FileWatchUtil(string filePath, Action<FileStream> action, int? timeOutMillis = null)
+        /// <param name="isStart">是否启动监听</param>
+        public FileWatchUtil(string filePath, Action<FileStream> action, int? timeOutMillis = null, bool isStart = false)
         {
             if (FileUtil.IsExistsFile(filePath))
             {
@@ -37,6 +38,10 @@ namespace JQ.Utils
                 EnsureUtil.NotNull(action, "file changed action");
                 _fileChangedHandle = action;
                 _fileInfo = new FileInfo(filePath);
+                if (isStart)
+                {
+                    StartWatching();
+                }
             }
             else
             {
@@ -50,7 +55,8 @@ namespace JQ.Utils
         /// <param name="fileInfo">文件信息</param>
         /// <param name="action">文件改变后的执行的方法</param>
         /// <param name="timeOutMillis">延迟时间</param>
-        public FileWatchUtil(FileInfo fileInfo, Action<FileStream> action, int? timeOutMillis = null)
+        /// <param name="isStart">是否启动监听</param>
+        public FileWatchUtil(FileInfo fileInfo, Action<FileStream> action, int? timeOutMillis = null, bool isStart = false)
         {
             if (timeOutMillis.HasValue)
             {
@@ -60,6 +66,10 @@ namespace JQ.Utils
             EnsureUtil.NotNull(_fileInfo, "watching fileInfo");
             _fileChangedHandle = action;
             _fileInfo = fileInfo;
+            if (isStart)
+            {
+                StartWatching();
+            }
         }
 
         public void StartWatching()

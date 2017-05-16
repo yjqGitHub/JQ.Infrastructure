@@ -88,6 +88,9 @@
     <Compile Include="Logger\ILoggerFactory.cs" />
     <Compile Include="Logger\NLogger\NLogLogger.cs" />
     <Compile Include="Logger\NLogger\NLoggerFactory.cs" />
+    <Compile Include="MQ\MqConfig.cs" />
+    <Compile Include="MQ\RabbitMQ\RabbitMqClient.cs" />
+    <Compile Include="MQ\RabbitMQ\RabbitMqConnectionFactory.cs" />
     <Compile Include="Redis\IRedisClient.cs" />
     <Compile Include="Redis\IRedisDatabaseProvider.cs" />
     <Compile Include="Redis\RedisCacheOptions.cs" />
@@ -113,9 +116,7 @@
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="MQ\RabbitMQ\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

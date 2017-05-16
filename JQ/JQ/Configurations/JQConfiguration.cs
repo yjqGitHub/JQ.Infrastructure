@@ -1,5 +1,6 @@
 ﻿using JQ.Container;
 using JQ.Extension;
+using JQ.MQ.RabbitMQ;
 using JQ.Redis.StackExchangeRedis;
 using JQ.Utils;
 using System;
@@ -93,12 +94,17 @@ namespace JQ.Configurations
             return Instance;
         }
 
+        /// <summary>
+        /// 停止时使用
+        /// </summary>
         public static void UnInstall()
         {
             //停止配置文件监控
             ConfigWacherUtil.Close();
             //释放所有redis连接
             ConnectionMultiplexerFactory.DisposeConn();
+            //释放所有Rabbitmq的连接
+            RabbitMqConnectionFactory.DisposeConn();
         }
 
         #endregion static
