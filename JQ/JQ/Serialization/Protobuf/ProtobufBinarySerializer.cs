@@ -1,4 +1,5 @@
-﻿using JQ.Serialization.Json;
+﻿using JQ.Extension;
+using JQ.Serialization.Json;
 using ProtoBuf;
 using System;
 using System.Collections.Concurrent;
@@ -88,7 +89,7 @@ namespace JQ.Serialization.Protobuf
             RuntimeTypeHandle typeHandle = type.TypeHandle;
             if (!_isHaveProtoContractCache.ContainsKey(typeHandle))
             {
-                _isHaveProtoContractCache[typeHandle] = type.IsDefined(typeof(ProtoContractAttribute), false);
+                _isHaveProtoContractCache[typeHandle] = type.IsDefined<ProtoContractAttribute>(false);
             }
             return _isHaveProtoContractCache[typeHandle];
         }

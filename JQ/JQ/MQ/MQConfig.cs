@@ -11,7 +11,7 @@ namespace JQ.MQ
     /// </summary>
     public sealed class MqConfig
     {
-        public MqConfig(string hostName, string password, string userName)
+        public MqConfig(string hostName, string userName, string password)
         {
             HostName = hostName;
             Password = password;

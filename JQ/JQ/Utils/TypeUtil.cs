@@ -33,7 +33,7 @@ namespace JQ.Utils
         }
 
         /// <summary>
-        /// 获取指定类型属性值
+        /// 获取指定类型属性值,假如该类型是数组、泛型，则获取他的表示泛型类型的类型实参或泛型类型定义的类型
         /// </summary>
         /// <typeparam name="T">属性类型</typeparam>
         /// <param name="type">要获取的类型</param>
@@ -53,7 +53,7 @@ namespace JQ.Utils
         }
 
         /// <summary>
-        /// 获取指定类型属性值
+        /// 获取指定类型属性值,假如该类型是数组、泛型，则获取他的表示泛型类型的类型实参或泛型类型定义的类型
         /// </summary>
         /// <typeparam name="T">属性类型</typeparam>
         /// <param name="type">要获取的类型</param>
@@ -71,6 +71,27 @@ namespace JQ.Utils
                 throw new NotSupportedException("此方法不支持枚举类型");
             }
             return Attribute.GetCustomAttribute(type, typeof(T), inherit) as T;
+        }
+
+        /// <summary>
+        /// 指示是否将指定类型或其派生类型的一个或多个特性应用于此成员。,假如该类型是数组、泛型，则获取他的表示泛型类型的类型实参或泛型类型定义的类型
+        /// </summary>
+        /// <typeparam name="T">属性类型</typeparam>
+        /// <param name="type">要判断的类型</param>
+        /// <param name="inherit">如果为 true，则指定还在 element 的祖先中搜索自定义属性。</param>
+        /// <returns>true表示存在</returns>
+        public static bool IsDefined<T>(Type type, bool inherit) where T : Attribute
+        {
+            if (type == null) return false;
+            if (type.IsArray || type.IsGenericType)
+            {
+                type = type.GetGenericArguments()[0];
+            }
+            if (type.IsEnum)
+            {
+                throw new NotSupportedException("此方法不支持枚举类型");
+            }
+            return type.IsDefined(typeof(T), inherit);
         }
     }
 }

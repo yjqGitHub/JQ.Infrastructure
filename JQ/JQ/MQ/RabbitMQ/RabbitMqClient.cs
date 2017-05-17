@@ -5,6 +5,7 @@ using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 
 namespace JQ.MQ.RabbitMQ
 {
@@ -15,7 +16,7 @@ namespace JQ.MQ.RabbitMQ
     /// 类功能描述：RabbitMqClient
     /// 创建标识：yjq 2017/5/16 13:42:08
     /// </summary>
-    public sealed class RabbitMqClient : JQDisposable
+    public sealed class RabbitMqClient : JQDisposable, IMqClient
     {
         private readonly IBinarySerializer _binarySerializer;
         private readonly MqConfig _mqConfig;
@@ -123,6 +124,8 @@ namespace JQ.MQ.RabbitMQ
             CreateExchangeAndQueue(mqAttribute.ExchangeName, mqAttribute.QueueName, mqAttribute.RoutingKey, exchangeType: mqAttribute.ExchangeType, durable: mqAttribute.Durable, exclusive: mqAttribute.Exclusive, autoDelete: mqAttribute.AutoDelete, arguments: mqAttribute.Arguments, isConsumer: isConsumer);
         }
 
+        #region 发送消息
+
         /// <summary>
         /// 发送消息
         /// </summary>
@@ -158,12 +161,20 @@ namespace JQ.MQ.RabbitMQ
             Channel.BasicPublish(exchangeName, routingKey, properties, _binarySerializer.Serialize(command));
         }
 
+        #endregion 发送消息
+
+        #region 订阅消息
+
         /// <summary>
         /// 订阅消息
         /// </summary>
         /// <typeparam name="T">消息类型</typeparam>
         /// <param name="actionHandle">处理该类型消息的方法</param>
-        public void Subscribe<T>(Action<T> actionHandle)
+        /// <param name="errorActionHandle">处理消息时发生错误时处理方法</param>
+        /// <param name="memberName">调用成员信息</param>
+        /// <param name="loggerName">记录器名字</param>
+        /// <param name="loggerType">记录器类型</param>
+        public void Subscribe<T>(Action<T> actionHandle, Action<T, Exception> errorActionHandle = null, string memberName = null, string loggerName = null, Type loggerType = null)
         {
             var mqAttribute = MqAttribute.GetMqAttribute<T>();
             CreateExchangeAndQueue(mqAttribute, isConsumer: true);
@@ -175,6 +186,13 @@ namespace JQ.MQ.RabbitMQ
                 try
                 {
                     actionHandle(message);
+                }
+                catch (Exception ex)
+                {
+                    if (errorActionHandle != null)
+                    {
+                        ExceptionUtil.LogException(() => { errorActionHandle(message, ex); }, memberName: memberName, loggerName: loggerName, loggerType: loggerType);
+                    }
                 }
                 finally
                 {
@@ -197,7 +215,11 @@ namespace JQ.MQ.RabbitMQ
         /// <param name="autoDelete">是否自动删除</param>
         /// <param name="exclusive">是否申明为排它队列</param>
         /// <param name="arguments">参数</param>
-        public void Subscribe<T>(Action<T> actionHandle, string exchangeName, string queueName, string routingKey, string exchangeType = MqExchangeType.FANOUT, bool durable = true, bool autoDelete = false, bool exclusive = false, IDictionary<string, object> arguments = null)
+        /// <param name="errorActionHandle">处理消息时发生错误时处理方法</param>
+        /// <param name="memberName">调用成员信息</param>
+        /// <param name="loggerName">记录器名字</param>
+        /// <param name="loggerType">记录器类型</param>
+        public void Subscribe<T>(Action<T> actionHandle, string exchangeName, string queueName, string routingKey, string exchangeType = MqExchangeType.FANOUT, bool durable = true, bool autoDelete = false, bool exclusive = false, IDictionary<string, object> arguments = null, Action<T, Exception> errorActionHandle = null, string memberName = null, string loggerName = null, Type loggerType = null)
         {
             CreateExchangeAndQueue(exchangeName, queueName, routingKey, exchangeType: exchangeType, durable: durable, exclusive: exclusive, autoDelete: autoDelete, arguments: arguments, isConsumer: true);
             var consumer = new EventingBasicConsumer(Channel);
@@ -209,6 +231,13 @@ namespace JQ.MQ.RabbitMQ
                 {
                     actionHandle(message);
                 }
+                catch (Exception ex)
+                {
+                    if (errorActionHandle != null)
+                    {
+                        ExceptionUtil.LogException(() => { errorActionHandle(message, ex); }, memberName: memberName, loggerName: loggerName, loggerType: loggerType);
+                    }
+                }
                 finally
                 {
                     Channel.BasicAck(ea.DeliveryTag, false);
@@ -217,12 +246,20 @@ namespace JQ.MQ.RabbitMQ
             Channel.BasicConsume(queueName, false, consumer);
         }
 
+        #endregion 订阅消息
+
+        #region 拉取消息
+
         /// <summary>
         /// 拉取消息
         /// </summary>
         /// <typeparam name="T">消息类型</typeparam>
         /// <param name="actionHandle">处理该类型消息的方法</param>
-        public void Pull<T>(Action<T> actionHandle)
+        /// <param name="errorActionHandle">处理消息时发生错误时处理方法</param>
+        /// <param name="memberName">调用成员信息</param>
+        /// <param name="loggerName">记录器名字</param>
+        /// <param name="loggerType">记录器类型</param>
+        public void Pull<T>(Action<T> actionHandle, Action<T, Exception> errorActionHandle = null, string memberName = null, string loggerName = null, Type loggerType = null)
         {
             var mqAttribute = MqAttribute.GetMqAttribute<T>();
             CreateExchangeAndQueue(mqAttribute, isConsumer: true);
@@ -235,6 +272,13 @@ namespace JQ.MQ.RabbitMQ
             try
             {
                 actionHandle(message);
+            }
+            catch (Exception ex)
+            {
+                if (errorActionHandle != null)
+                {
+                    ExceptionUtil.LogException(() => { errorActionHandle(message, ex); }, memberName: memberName, loggerName: loggerName, loggerType: loggerType);
+                }
             }
             finally
             {
@@ -255,7 +299,11 @@ namespace JQ.MQ.RabbitMQ
         /// <param name="autoDelete">是否自动删除</param>
         /// <param name="exclusive">是否申明为排它队列</param>
         /// <param name="arguments">参数</param>
-        public void Pull<T>(Action<T> actionHandle, string exchangeName, string queueName, string routingKey, string exchangeType = MqExchangeType.FANOUT, bool durable = true, bool autoDelete = false, bool exclusive = false, IDictionary<string, object> arguments = null)
+        /// <param name="errorActionHandle">处理消息时发生错误时处理方法</param>
+        /// <param name="memberName">调用成员信息</param>
+        /// <param name="loggerName">记录器名字</param>
+        /// <param name="loggerType">记录器类型</param>
+        public void Pull<T>(Action<T> actionHandle, string exchangeName, string queueName, string routingKey, string exchangeType = MqExchangeType.FANOUT, bool durable = true, bool autoDelete = false, bool exclusive = false, IDictionary<string, object> arguments = null, Action<T, Exception> errorActionHandle = null, string memberName = null, string loggerName = null, Type loggerType = null)
         {
             CreateExchangeAndQueue(exchangeName, queueName, routingKey, exchangeType: exchangeType, durable: durable, exclusive: exclusive, autoDelete: autoDelete, arguments: arguments);
             var result = Channel.BasicGet(queueName, false);
@@ -268,11 +316,145 @@ namespace JQ.MQ.RabbitMQ
             {
                 actionHandle(message);
             }
+            catch (Exception ex)
+            {
+                if (errorActionHandle != null)
+                {
+                    ExceptionUtil.LogException(() => { errorActionHandle(message, ex); }, memberName: memberName, loggerName: loggerName, loggerType: loggerType);
+                }
+            }
             finally
             {
                 Channel.BasicAck(result.DeliveryTag, false);
             }
         }
+
+        #endregion 拉取消息
+
+        #region RPC客户端
+
+        /// <summary>
+        /// RPC客户端
+        /// </summary>
+        /// <typeparam name="T">消息类型</typeparam>
+        /// <param name="command">消息内容</param>
+        /// <returns>处理之后的信息</returns>
+        public T RpcClient<T>(T command)
+        {
+            var mqAttribute = MqAttribute.GetMqAttribute<T>();
+            EnsureUtil.NotNull(mqAttribute, "mqAttribute");
+            return RpcClient(command, mqAttribute.ExchangeName, mqAttribute.QueueName, mqAttribute.RoutingKey
+                 , exchangeType: mqAttribute.ExchangeType, durable: mqAttribute.Durable, autoDelete: mqAttribute.AutoDelete, exclusive: mqAttribute.Exclusive, arguments: mqAttribute.Arguments);
+        }
+
+        /// <summary>
+        /// RPC客户端
+        /// </summary>
+        /// <typeparam name="T">消息类型</typeparam>
+        /// <param name="command">消息内容</param>
+        /// <param name="exchangeName">交换机名字</param>
+        /// <param name="queueName">队列名</param>
+        /// <param name="routingKey">路由关键字</param>
+        /// <param name="exchangeType">交换机类型</param>
+        /// <param name="durable">是否持久化</param>
+        /// <param name="autoDelete">是否自动删除</param>
+        /// <param name="exclusive">是否申明为排它队列</param>
+        /// <param name="arguments">参数</param>
+        /// <returns>处理之后的信息</returns>
+        public T RpcClient<T>(T command, string exchangeName, string queueName, string routingKey, string exchangeType = MqExchangeType.FANOUT, bool durable = true, bool autoDelete = false, bool exclusive = false, IDictionary<string, object> arguments = null)
+        {
+            CreateExchangeAndQueue(exchangeName, queueName, routingKey, exchangeType: exchangeType, durable: durable, exclusive: exclusive, autoDelete: autoDelete, arguments: arguments);
+            var consumer = new QueueingBasicConsumer(Channel);
+            Channel.BasicConsume(queueName, true, consumer);
+
+            try
+            {
+                var correlationId = Guid.NewGuid().ToString();
+                var basicProperties = Channel.CreateBasicProperties();
+                basicProperties.ReplyTo = queueName;
+                basicProperties.CorrelationId = correlationId;
+
+                Channel.BasicPublish(exchangeName, routingKey, basicProperties, _binarySerializer.Serialize(command));
+
+                var sw = Stopwatch.StartNew();
+                while (true)
+                {
+                    var ea = consumer.Queue.Dequeue();
+                    if (ea.BasicProperties.CorrelationId == correlationId)
+                    {
+                        return _binarySerializer.Deserialize<T>(ea.Body);
+                    }
+
+                    if (sw.ElapsedMilliseconds > 30000)
+                        throw new Exception("等待响应超时");
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        #endregion RPC客户端
+
+        #region RPC服务端
+
+        /// <summary>
+        /// RPC服务端
+        /// </summary>
+        /// <typeparam name="T">消息类型</typeparam>
+        /// <param name="handler">处理该类型消息的方法</param>
+        /// <param name="memberName">调用成员信息</param>
+        /// <param name="loggerName">记录器名字</param>
+        /// <param name="loggerType">记录器类型</param>
+        public void RpcServer<T>(Func<T, T> handler, string memberName = null, string loggerName = null, Type loggerType = null)
+        {
+            var mqAttribute = MqAttribute.GetMqAttribute<T>();
+            EnsureUtil.NotNull(mqAttribute, "mqAttribute");
+            RpcServer(handler, mqAttribute.ExchangeName, mqAttribute.QueueName, mqAttribute.RoutingKey
+                , exchangeType: mqAttribute.ExchangeType, durable: mqAttribute.Durable, autoDelete: mqAttribute.AutoDelete, exclusive: mqAttribute.Exclusive, arguments: mqAttribute.Arguments, memberName: memberName, loggerName: loggerName, loggerType: loggerType);
+        }
+
+        /// <summary>
+        /// RPC服务端
+        /// </summary>
+        /// <typeparam name="T">消息类型</typeparam>
+        /// <param name="handler">处理该类型消息的方法</param>
+        /// <param name="exchangeName">交换机名字</param>
+        /// <param name="queueName">队列名</param>
+        /// <param name="routingKey">路由关键字</param>
+        /// <param name="exchangeType">交换机类型</param>
+        /// <param name="durable">是否持久化</param>
+        /// <param name="autoDelete">是否自动删除</param>
+        /// <param name="exclusive">是否申明为排它队列</param>
+        /// <param name="arguments">参数</param>
+        /// <param name="errorActionHandle">处理消息时发生错误时处理方法</param>
+        /// <param name="memberName">调用成员信息</param>
+        /// <param name="loggerName">记录器名字</param>
+        /// <param name="loggerType">记录器类型</param>
+        public void RpcServer<T>(Func<T, T> handler, string exchangeName, string queueName, string routingKey, string exchangeType = MqExchangeType.FANOUT, bool durable = true, bool autoDelete = false, bool exclusive = false, IDictionary<string, object> arguments = null, string memberName = null, string loggerName = null, Type loggerType = null)
+        {
+            CreateExchangeAndQueue(exchangeName, queueName, routingKey, exchangeType: exchangeType, durable: durable, exclusive: exclusive, autoDelete: autoDelete, arguments: arguments);
+            var consumer = new EventingBasicConsumer(Channel);
+            consumer.Received += (model, ea) =>
+            {
+                var body = ea.Body;
+                var message = _binarySerializer.Deserialize<T>(ea.Body);
+
+                var props = ea.BasicProperties;
+                var replyProps = Channel.CreateBasicProperties();
+                replyProps.CorrelationId = props.CorrelationId;
+                message = ExceptionUtil.LogException(() =>
+                  {
+                      return handler(message);
+                  }, memberName: memberName, loggerName: loggerName, loggerType: loggerType);
+                Channel.BasicPublish(exchangeName, props.ReplyTo, replyProps, _binarySerializer.Serialize(message));
+                Channel.BasicAck(ea.DeliveryTag, false);
+            };
+            Channel.BasicConsume(queueName, false, consumer);
+        }
+
+        #endregion RPC服务端
 
         protected override void DisposeCode()
         {

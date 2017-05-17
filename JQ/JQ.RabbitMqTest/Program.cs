@@ -18,7 +18,7 @@ namespace JQ.RabbitMqTest
             JQConfiguration.Create("RabbitMqTest").UseDefaultConfig();
             RabbitMqClient mqClient = new RabbitMqClient(GetDefaultMqConfig(), ContainerManager.Resolve<IBinarySerializer>());
             int dealedMessageCount = 0;
-            mqClient.Subscribe<MqMessage>((mqMessage) =>
+            mqClient.Pull<MqMessage>((mqMessage) =>
             {
                 LogUtil.Debug(mqMessage.ToJson());
                 Interlocked.Increment(ref dealedMessageCount);

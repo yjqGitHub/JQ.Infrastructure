@@ -92,11 +92,14 @@
     <Compile Include="Logger\ILoggerFactory.cs" />
     <Compile Include="Logger\NLogger\NLogLogger.cs" />
     <Compile Include="Logger\NLogger\NLoggerFactory.cs" />
+    <Compile Include="MQ\IMqClient.cs" />
+    <Compile Include="MQ\IMqFactory.cs" />
     <Compile Include="MQ\MqAttribute.cs" />
     <Compile Include="MQ\MqConfig.cs" />
     <Compile Include="MQ\MqExchangeType.cs" />
     <Compile Include="MQ\RabbitMQ\RabbitMqClient.cs" />
     <Compile Include="MQ\RabbitMQ\RabbitMqConnectionFactory.cs" />
+    <Compile Include="MQ\RabbitMQ\RabbitMqFactory.cs" />
     <Compile Include="Redis\IRedisClient.cs" />
     <Compile Include="Redis\IRedisDatabaseProvider.cs" />
     <Compile Include="Redis\RedisCacheOptions.cs" />

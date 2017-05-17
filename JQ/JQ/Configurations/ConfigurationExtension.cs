@@ -4,6 +4,8 @@ using JQ.Container;
 using JQ.Container.Autofac;
 using JQ.Logger;
 using JQ.Logger.NLogger;
+using JQ.MQ;
+using JQ.MQ.RabbitMQ;
 using JQ.Redis;
 using JQ.Redis.StackExchangeRedis;
 using JQ.Serialization;
@@ -35,6 +37,7 @@ namespace JQ.Configurations
                 .UseProtobufBinarySerializer()
                 .UseStackExchangeRedis()
                 .UseNLog()
+                .UseRabbitMq()
                 ;
             return configuration;
         }
@@ -116,5 +119,15 @@ namespace JQ.Configurations
         }
 
         #endregion NLog
+
+        #region RabbitMq
+
+        public static JQConfiguration UseRabbitMq(this JQConfiguration configuration)
+        {
+            configuration.SetDefault<IMqFactory, RabbitMqFactory>();
+            return configuration;
+        }
+
+        #endregion RabbitMq
     }
 }
