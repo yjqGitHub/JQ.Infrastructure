@@ -2,6 +2,8 @@
 using JQ.Configurations.ServiceRegisterName;
 using JQ.Container;
 using JQ.Container.Autofac;
+using JQ.Logger;
+using JQ.Logger.NLogger;
 using JQ.Redis;
 using JQ.Redis.StackExchangeRedis;
 using JQ.Serialization;
@@ -32,6 +34,7 @@ namespace JQ.Configurations
                 .UseJsonBinarySerializer()
                 .UseProtobufBinarySerializer()
                 .UseStackExchangeRedis()
+                .UseNLog()
                 ;
             return configuration;
         }
@@ -76,19 +79,19 @@ namespace JQ.Configurations
 
         public static JQConfiguration UseDefaultBinarySerializer(this JQConfiguration configuration)
         {
-            configuration.SetDefault<IBinarySerializer, DefaultBinarySerializer>(serviceName: BinarySerializer.REGISTER_NAME_DEFAULTBINARY);
+            configuration.SetDefault<IBinarySerializer, DefaultBinarySerializer>(serviceName: Register.REGISTER_NAME_DEFAULTBINARY);
             return configuration;
         }
 
         public static JQConfiguration UseJsonBinarySerializer(this JQConfiguration configuration)
         {
-            configuration.SetDefault<IBinarySerializer, JsonBinarySerializer>(serviceName: BinarySerializer.REGISTER_NAME_JSONBINARY);
+            configuration.SetDefault<IBinarySerializer, JsonBinarySerializer>(serviceName: Register.REGISTER_NAME_JSONBINARY);
             return configuration;
         }
 
         public static JQConfiguration UseProtobufBinarySerializer(this JQConfiguration configuration)
         {
-            configuration.SetDefault<IBinarySerializer, ProtobufBinarySerializer>(serviceName: BinarySerializer.REGISTER_NAME_PROTOBUFBINARY);
+            configuration.SetDefault<IBinarySerializer, ProtobufBinarySerializer>(serviceName: Register.REGISTER_NAME_PROTOBUFBINARY);
             return configuration;
         }
 
@@ -98,10 +101,20 @@ namespace JQ.Configurations
 
         public static JQConfiguration UseStackExchangeRedis(this JQConfiguration configuration)
         {
-            configuration.SetDefault<IRedisDatabaseProvider, StackExchangeRedisProvider>(serviceName: "StackExchangeRedis");
+            configuration.SetDefault<IRedisDatabaseProvider, StackExchangeRedisProvider>(serviceName: Register.REGISTER_NAME_STACKEXCHANGEREDIS);
             return configuration;
         }
 
         #endregion Redis
+
+        #region NLog
+
+        public static JQConfiguration UseNLog(this JQConfiguration configuration)
+        {
+            configuration.SetDefault<ILoggerFactory, NLoggerFactory>(serviceName: Register.REGISTER_NAME_NLOGFACTORY);
+            return configuration;
+        }
+
+        #endregion NLog
     }
 }

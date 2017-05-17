@@ -105,6 +105,7 @@ namespace JQ.Configurations
             ConnectionMultiplexerFactory.DisposeConn();
             //释放所有Rabbitmq的连接
             RabbitMqConnectionFactory.DisposeConn();
+            ContainerManager.SetContainer(null);
         }
 
         #endregion static

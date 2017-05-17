@@ -27,12 +27,22 @@ namespace JQ.Container.Autofac
         {
             _containerBuilder = builder ?? new ContainerBuilder();
         }
-
+        private static object _ContainerLock = new object();
         public IContainer Container
         {
             get
             {
-                return _container ?? (_container = _containerBuilder.Build());
+                if (_container == null)
+                {
+                    lock (_ContainerLock)
+                    {
+                        if (_container == null)
+                        {
+                            _container = _containerBuilder.Build();
+                        }
+                    }
+                }
+                return _container;
             }
         }
 

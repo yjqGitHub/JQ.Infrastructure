@@ -30,16 +30,17 @@ namespace JQ.Test
             jsonSerializer.ShouldBe<NewtonsoftJsonSerializer>();
             var binarySerializer = ContainerManager.Resolve<IBinarySerializer>();
             binarySerializer.ShouldBe<ProtobufBinarySerializer>();
-            var binarySerializerDefault = ContainerManager.ResolveNamed<IBinarySerializer>(BinarySerializer.REGISTER_NAME_DEFAULTBINARY);
+            var binarySerializerDefault = ContainerManager.ResolveNamed<IBinarySerializer>(Register.REGISTER_NAME_DEFAULTBINARY);
             binarySerializerDefault.ShouldBe<DefaultBinarySerializer>();
-            var binarySerializerJson = ContainerManager.ResolveNamed<IBinarySerializer>(BinarySerializer.REGISTER_NAME_JSONBINARY);
+            var binarySerializerJson = ContainerManager.ResolveNamed<IBinarySerializer>(Register.REGISTER_NAME_JSONBINARY);
             binarySerializerJson.ShouldBe<JsonBinarySerializer>();
-            var binarySerializerProtobuf = ContainerManager.ResolveNamed<IBinarySerializer>(BinarySerializer.REGISTER_NAME_PROTOBUFBINARY);
+            var binarySerializerProtobuf = ContainerManager.ResolveNamed<IBinarySerializer>(Register.REGISTER_NAME_PROTOBUFBINARY);
             binarySerializerProtobuf.ShouldBe<ProtobufBinarySerializer>();
         }
 
         public void Dispose()
         {
+            //JQConfiguration.UnInstall();
         }
     }
 }

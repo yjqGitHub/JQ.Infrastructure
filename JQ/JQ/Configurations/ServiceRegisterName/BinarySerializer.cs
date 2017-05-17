@@ -7,7 +7,7 @@
     /// 类功能描述：BinarySerializer注册的名字
     /// 创建标识：yjq 2017/5/13 16:44:14
     /// </summary>
-    public static class BinarySerializer
+    public static partial class Register
     {
         /// <summary>
         /// 默认字节序列化服务注册的名字

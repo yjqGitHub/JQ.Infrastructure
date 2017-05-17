@@ -67,6 +67,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Configurations\ServiceRegisterName\BinarySerializer.cs" />
+    <Compile Include="Configurations\ServiceRegisterName\Logger.cs" />
+    <Compile Include="Configurations\ServiceRegisterName\Redis.cs" />
     <Compile Include="Container\Autofac\AutofacExtension.cs" />
     <Compile Include="Container\Autofac\AutofacObjectContainer.cs" />
     <Compile Include="Configurations\ConfigurationExtension.cs" />
