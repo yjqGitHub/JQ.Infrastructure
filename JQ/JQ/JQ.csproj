@@ -109,6 +109,7 @@
     <Compile Include="Logger\ILoggerFactory.cs" />
     <Compile Include="Logger\NLogger\NLogLogger.cs" />
     <Compile Include="Logger\NLogger\NLoggerFactory.cs" />
+    <Compile Include="MongoDB\MongoDbBaseRepository.cs" />
     <Compile Include="MongoDB\MongoDbProvider.cs" />
     <Compile Include="MQ\IMqClient.cs" />
     <Compile Include="MQ\IMqFactory.cs" />
