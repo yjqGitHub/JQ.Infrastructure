@@ -10,7 +10,7 @@ namespace JQ.MQ.RabbitMQ
     /// 类功能描述：RabbitMQConnectionFactory
     /// 创建标识：yjq 2017/5/16 13:35:40
     /// </summary>
-    public sealed class RabbitMqConnectionFactory
+    internal sealed class RabbitMqConnectionFactory
     {
         private RabbitMqConnectionFactory()
         {

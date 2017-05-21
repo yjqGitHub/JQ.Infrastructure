@@ -10,7 +10,7 @@ namespace JQ.Redis.StackExchangeRedis
     /// 类功能描述：StackExchangeRedisProvider
     /// 创建标识：yjq 2017/5/15 22:26:58
     /// </summary>
-    public sealed class StackExchangeRedisProvider : IRedisDatabaseProvider
+    internal sealed class StackExchangeRedisProvider : IRedisDatabaseProvider
     {
         /// <summary>
         /// 创建默认的redis客户端

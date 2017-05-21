@@ -12,7 +12,7 @@ namespace JQ.Redis.StackExchangeRedis
     /// 类功能描述：ConnectionMultiplexer工厂
     /// 创建标识：yjq 2017/5/15 20:42:58
     /// </summary>
-    public sealed class ConnectionMultiplexerFactory
+    internal sealed class ConnectionMultiplexerFactory
     {
         private static ConcurrentDictionary<string, ConnectionMultiplexer> _connectionMultiplexerCache = new ConcurrentDictionary<string, ConnectionMultiplexer>();
 
