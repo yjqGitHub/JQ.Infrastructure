@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<package >
+  <metadata>
+    <id>$id$</id>
+    <version>1.0.0.1</version>
+    <title>JQ</title>
+    <authors>yjq</authors>
+    <owners>yjq</owners>
+    <licenseUrl>http://www.apache.org/licenses/LICENSE-2.0.html</licenseUrl>
+    <projectUrl>https://github.com/yjqGitHub/JQ.Infrastructure</projectUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>JQ</description>
+    <copyright>Copyright 2017</copyright>
+  </metadata>
+</package>
